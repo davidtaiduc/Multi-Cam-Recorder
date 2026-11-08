@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "name": "MultiCam Remote",
+    "slug": "multicam-remote",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "plugins": [
+      "expo-secure-store"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.multicam.remote",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.multicam.remote"
+    }
+  }
+}

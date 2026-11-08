@@ -1,0 +1,21 @@
+{
+  "name": "multicam",
+  "private": true,
+  "workspaces": [
+    "apps/controller",
+    "apps/mobile",
+    "packages/contracts"
+  ],
+  "engines": {
+    "node": ">=24.0.0 <25"
+  },
+  "scripts": {
+    "dev:server": "node --env-file-if-exists=apps/server/.env apps/server/src/main.mjs",
+    "seed": "node --env-file=apps/server/.env apps/server/src/seed.mjs",
+    "dev:controller": "npm run dev -w @multicam/controller",
+    "dev:mobile": "npm run start -w @multicam/mobile",
+    "test": "node --test apps/server/test/*.test.mjs",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "build": "npm run build -w @multicam/controller"
+  }
+}

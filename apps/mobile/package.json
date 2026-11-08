@@ -1,0 +1,23 @@
+{
+  "name": "@multicam/mobile",
+  "private": true,
+  "version": "0.1.0",
+  "main": "index.ts",
+  "scripts": {
+    "start": "expo start --lan",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "expo": "55.0.32",
+    "expo-crypto": "~55.0.0",
+    "expo-secure-store": "~55.0.0",
+    "react": "19.2.0",
+    "react-native": "0.83.10"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.2",
+    "@types/react": "^19.2.0"
+  }
+}
