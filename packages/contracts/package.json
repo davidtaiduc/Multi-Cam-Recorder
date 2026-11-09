@@ -4,6 +4,10 @@
   "private": true,
   "types": "src/index.ts",
   "exports": {
-    "types": "./src/index.ts"
-  }
+    ".": {
+      "types": "./src/index.ts"
+    },
+    "./client": "./src/client.ts"
+  },
+  "type": "module"
 }

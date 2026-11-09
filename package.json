@@ -7,7 +7,7 @@
     "packages/contracts"
   ],
   "engines": {
-    "node": ">=24.0.0 <25"
+    "node": ">=24.3.0 <25"
   },
   "scripts": {
     "dev:server": "node --env-file-if-exists=apps/server/.env apps/server/src/main.mjs",
@@ -16,6 +16,7 @@
     "dev:mobile": "npm run start -w @multicam/mobile",
     "test": "node --test apps/server/test/*.test.mjs",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "build": "npm run build -w @multicam/controller"
+    "build": "npm run build -w @multicam/controller",
+    "dev:mobile:clear": "npm run start -w @multicam/mobile -- --clear --go"
   }
 }

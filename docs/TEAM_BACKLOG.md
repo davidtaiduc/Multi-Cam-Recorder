@@ -16,3 +16,9 @@ Nếu ít hơn 5 người, ghép C với A, E với D. Chưa gán tên vì chưa
 
 ## Mốc
 Tuần 1: auth chuẩn + phòng; Tuần 2: camera + trạng thái; Tuần 3: command + Start/Stop; Tuần 4: upload; Tuần 5: library + tài khoản còn lại + báo cáo.
+
+## Cập nhật Mốc 1
+Backend auth/phòng, profile, OTP adapter/DEV, refresh rotation và migration đã triển khai.
+Controller có QR/khôi phục phiên; Remote có đăng ký-xác thực và SecureStore token pair.
+Cần nghiệm thu LAN bằng hai điện thoại thật; email/SMS thật cần adapter của nhà cung cấp.
+Mốc 2–5 chưa bắt đầu. API reset password có sẵn; giao diện quên mật khẩu để mốc tài khoản.
