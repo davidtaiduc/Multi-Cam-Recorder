@@ -5,7 +5,16 @@
     "version": "0.1.0",
     "orientation": "portrait",
     "plugins": [
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "MultiCam cần camera để quay clip thử trên thiết bị.",
+          "microphonePermission": "MultiCam cần micro để ghi tiếng trong clip thử."
+        }
+      ],
+      "expo-video",
+      "expo-sharing"
     ],
     "ios": {
       "bundleIdentifier": "com.multicam.remote",

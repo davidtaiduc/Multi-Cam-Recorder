@@ -97,3 +97,61 @@ Không đổi API, dependency hoặc dữ liệu lưu phiên. Test hiện có 11
 typecheck cả hai client pass sau sửa JSX. Cần thử UI và bàn phím/OTP thực tế trên iPhone.
 
 Bundle iOS Hermes cho giao diện mới: pass, 635 modules; export kết thúc và worker đã thoát.
+
+## Mốc 2A — Camera và clip cục bộ
+
+Remote SDK 58 dùng `expo-camera`, `expo-file-system`, `expo-video`,
+`expo-image-manipulator` và `expo-sharing`. Clip nằm trong `Paths.document/recordings`.
+Mỗi lần quay dùng UUID riêng và định danh `local-test`. Giới hạn quay thử là 60 giây
+hoặc 150 MB mỗi clip. App yêu cầu còn tối thiểu 500 MB trước khi bắt đầu quay.
+
+### Kiểm tra tự động trên Windows
+
+- Node 24.22.2. `npm test` qua 11/11, `npm run typecheck` và `npm run build` đều qua.
+- `node --test apps/mobile/test/videoContainer.test.mjs` qua 3/3 với hộp MP4/QuickTime
+  giả lập, dữ liệu thiếu và tên camera chứa ký tự đường dẫn.
+- `expo install --check` xác nhận dependency tương thích. Expo Doctor qua 20/20.
+- `expo export --platform ios` qua 681 modules, Android qua 678 modules. Đây là
+  kiểm tra bundle Hermes, còn chạy native trên iPhone và Android chờ nghiệm thu.
+
+### Checklist trên iPhone
+
+1. Khởi động lại Metro bằng lệnh trong README và mở QR mới trong Expo Go SDK 58.
+   Đăng nhập Remote, chưa cần vào phòng. Mở **Camera và clip cục bộ**.
+2. Cấp camera và micro, xác nhận có preview. Thử từ chối một quyền trong lần thử riêng,
+   kiểm tra thông báo, nút thử lại và **Mở Cài đặt**. Bật lại quyền rồi quay lại app.
+3. Đổi camera trước/sau. Quay 5–10 giây, nói vài câu, kiểm tra bộ đếm và nút đổi camera
+   bị khóa trong lúc quay. Bấm **Dừng quay** và chờ **Đã lưu**. Kiểm tra ảnh thu nhỏ
+   hoặc thông báo thiếu ảnh nếu trích khung hình thất bại.
+4. Bấm **Mở clip**, phát và kiểm tra hình, tiếng, tua. Đóng rồi mở lại app, vào màn hình
+   camera và phát lại chính clip đó để kiểm tra lưu qua khởi động lại.
+5. Thử quay rồi bấm **Quay lại**, hoặc đưa app vào nền. Khi quay lại, kiểm tra app đã
+   kết thúc ghi, báo kết quả lưu hoặc lỗi rõ ràng, và có thể mở preview/quay lại.
+6. Thử quay cục bộ khi đã join phòng. Kiểm tra phòng và quyền điều khiển giữ nguyên.
+
+### Kiểm tra file thực tế
+
+App đọc các hộp container và brand của file do camera tạo trước khi đặt đuôi, sau đó
+kiểm tra file tại thư mục đích. Expo Camera SDK 58 trên iOS tạo tệp `.mov` theo mã nguồn
+native của phiên bản cài đặt. Nếu byte cho thấy QuickTime, app giữ `.mov`. App lưu `.mp4`
+khi nhận dạng được brand MP4 và cấu trúc chứa dữ liệu media. Kiểm tra này phân loại
+container, còn tính phát được của mọi mẫu và codec cần kiểm tra trên clip thật.
+
+Mở clip, chọn **Chia sẻ tệp để kiểm tra**, lưu vào Files và chép tệp gốc sang Windows.
+Nếu máy có `ffprobe`, chạy với đường dẫn của clip đã chép.
+
+```powershell
+ffprobe -v error -show_entries format_tags=major_brand,compatible_brands:stream=codec_type,codec_name -of json "C:\path\to\clip.mov"
+ffprobe -v trace -show_format "C:\path\to\clip.mov" 2>&1 | Select-String "type:'(moof|mvex)'"
+```
+
+| Mục | Kết quả hiện tại và cách xác nhận |
+|---|---|
+| Container MP4 | Bộ phân loại đã qua test với mẫu tổng hợp. Cần `major_brand` của clip thật. `qt` là QuickTime. `format_name` của ffprobe có thể liệt kê nhiều định dạng cùng họ. |
+| Video H.264 | App yêu cầu `avc1` trên iOS. Cần xác nhận stream video có `codec_name: h264`. |
+| Âm thanh AAC | App bật thu micro. Cần xác nhận stream audio có `codec_name: aac` và nghe thử. |
+| Fragmented MP4 | Bộ đọc phát hiện `moof` trong mẫu tổng hợp. Expo Camera chưa bảo đảm đầu ra phân mảnh. Kiểm tra `moof` ở cấp gốc và `mvex` trong `moov` trên clip MP4 thật. |
+
+Tham khảo [Expo Camera SDK 58](https://docs.expo.dev/versions/v58.0.0/sdk/camera/),
+[FileSystem](https://docs.expo.dev/versions/v58.0.0/sdk/filesystem/) và
+[Expo Video](https://docs.expo.dev/versions/v58.0.0/sdk/video/).

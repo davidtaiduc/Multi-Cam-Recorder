@@ -65,8 +65,8 @@ Migration tự nâng DB cũ, không xóa dữ liệu. Tài khoản legacy vẫn 
 legacy trống và token cũ cần login lại để có refresh. Backup DB trước khi nâng cấp.
 Mở lại phòng hết hạn để gia hạn mã. Remote có thể rời phòng/thu hồi quyền bất kỳ lúc nào.
 
-Chưa tích hợp nhà cung cấp email/SMS, chưa có UI quên mật khẩu, camera, sync, command,
-upload hay thư viện. Chưa native build hoặc kiểm thử điện thoại thật. QR chứa mã mời
+Chưa tích hợp nhà cung cấp email/SMS, chưa có UI quên mật khẩu, sync, command,
+upload hay thư viện trên server. Người dùng đã xác nhận luồng Mốc 1. QR chứa mã mời
 thuần; chưa triển khai quét QR trong app. Chi tiết: docs/API.md, docs/VALIDATION.md.
 
 ## Demo Windows (Mốc 1)
@@ -131,3 +131,20 @@ không đăng ký lại. Mã DEV được hiển thị riêng với nhãn thử 
 Nút gửi lại có đếm ngược 120 giây. Xác thực thành công sẽ trở về đăng nhập, giữ email.
 Tài khoản đã tạo nhưng chưa xác thực: vào tab Đăng nhập, nhập email rồi chọn
 **Đã đăng ký nhưng chưa xác thực?** để tiếp tục bước OTP.
+
+## Quay thử trên Remote (Mốc 2A)
+
+Sau khi cập nhật dependency, khởi động lại terminal Expo từ thư mục gốc trên Windows.
+
+```powershell
+npm exec --yes --package=node@24 --call "npm run dev:mobile:clear"
+```
+
+Quét QR bằng iPhone có Expo Go SDK 58. Đăng nhập Remote và chọn **Camera và clip cục bộ**.
+Cấp quyền camera và micro, đợi preview sẵn sàng, đổi camera, quay 5–10 giây rồi dừng.
+Chờ **Đã lưu**, mở clip để kiểm tra cả hình và tiếng. Đóng và mở lại app, vào màn hình
+camera để kiểm tra clip vẫn phát được. Bạn có thể quay thử khi đang ở trong hoặc ngoài phòng.
+
+Clip QuickTime được giữ đuôi `.mov`. Clip nhận dạng là MP4 được lưu với đuôi `.mp4`.
+Các bước nghiệm thu quyền, vào nền, lưu và kiểm tra codec trên máy tính nằm trong
+[VALIDATION.md](docs/VALIDATION.md).
