@@ -5,7 +5,21 @@ export function createApi(base:string,storage:SessionStorage,onChange:(v:LoginDa
  let session:LoginData|null=null,refreshing:Promise<void>|null=null;
  async function set(value:LoginData|null){await storage.write(value);session=value;onChange(value);}
  async function request<T>(path:string,input:unknown,token?:string):Promise<T>{
- let res:Response;try{res=await fetch(base+path,{method:input===undefined?'GET':'POST',headers:{'Content-Type':'application/json',...(token?{Authorization:`Bearer ${token}`}:{})},...(input===undefined?{}:{body:JSON.stringify(input)})});}catch{throw Error('Server unreachable. Session retained. Check LAN address and connection.');}
+ const method = input === undefined ? 'GET' : 'POST';
+ let res: Response;
+ try {
+   res = await fetch(base + path, {
+     method,
+     headers: {
+       ...(input === undefined ? {} : {'Content-Type': 'application/json'}),
+       ...(token ? {Authorization: `Bearer ${token}`} : {}),
+     },
+     ...(input === undefined ? {} : {body: JSON.stringify(input)}),
+   });
+ } catch (cause) {
+   const detail = cause instanceof Error ? cause.message : String(cause);
+   throw Error(`Không kết nối được máy chủ (${method} ${base + path}). ${detail}`, {cause});
+ }
  const json=await res.json();if(!res.ok)throw new ApiError(res.status,json.code,json.message);return json.data;
  }
  async function refresh(){
